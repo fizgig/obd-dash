@@ -1,0 +1,3 @@
+pygame>=2.1
+# Uncomment when wiring up a real ELM327 Bluetooth adapter:
+# obd>=0.7.1
