@@ -1,0 +1,3 @@
+PySide6>=6.5
+# Shared data model only needs the stdlib. Uncomment for a real ELM327 adapter:
+# obd>=0.7.1

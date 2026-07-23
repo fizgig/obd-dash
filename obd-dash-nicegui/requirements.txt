@@ -1,0 +1,5 @@
+nicegui>=1.4
+# Optional: desktop-window mode (python app.py --native)
+# pywebview>=4.4
+# Optional: a real ELM327 Bluetooth adapter
+# obd>=0.7.1

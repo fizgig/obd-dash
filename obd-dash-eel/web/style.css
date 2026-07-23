@@ -1,0 +1,204 @@
+/* PiZero OBD -- Eel edition.
+   Four design options. Each is a colour palette (theme-* on <body>) plus a
+   layout (layout-* on #stage). app.js builds the matching DOM; the palette is
+   pure CSS custom properties so every component below is theme-agnostic. */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+/* =========================== PALETTES (colour) =========================== */
+.theme-cockpit {
+  --bg:#0e1116; --panel:#161b22; --stroke:#2c343f; --track:#263137;
+  --text:#e6edf3; --muted:#8b949e; --accent:#22d3ee; --amber:#f59e0b;
+  --red:#ef4444; --green:#22c55e; --purple:#a78bfa;
+  --font:'Segoe UI',system-ui,sans-serif; --board:var(--bg);
+}
+.theme-cluster {
+  --bg:#08090c; --panel:#111318; --stroke:#20242d; --track:#1c2028;
+  --text:#f1f5f9; --muted:#8a94a6; --accent:#f43f5e; --amber:#f59e0b;
+  --red:#f43f5e; --green:#22c55e; --purple:#818cf8;
+  --font:'Segoe UI',system-ui,sans-serif; --board:#050608;
+}
+.theme-cards {
+  --bg:#0b1020; --panel:#151a2e; --stroke:#26304d; --track:#26304d;
+  --text:#eef2ff; --muted:#94a3c4; --accent:#a78bfa; --amber:#fbbf24;
+  --red:#fb7185; --green:#34d399; --purple:#c4b5fd;
+  --font:'Segoe UI',system-ui,sans-serif; --board:#070b16;
+}
+.theme-retro {
+  --bg:#0a0700; --panel:#140f02; --stroke:#3a2c05; --track:#241b04;
+  --text:#ffb000; --muted:#9a7614; --accent:#ffb000; --amber:#ff7b00;
+  --red:#ff3b30; --green:#7CFC00; --purple:#ffd166;
+  --font:'Consolas','DejaVu Sans Mono',monospace; --board:#080600;
+}
+.theme-neon {
+  --bg:#0f0524; --panel:#180a35; --stroke:#34176b; --track:#241247;
+  --text:#f5e6ff; --muted:#b48ce0; --accent:#22d3ee; --amber:#fbbf24;
+  --red:#fb7185; --green:#34d399; --purple:#e879f9;
+  --font:'Segoe UI',system-ui,sans-serif; --board:#0a0318;
+}
+.theme-hud {
+  --bg:#02120a; --panel:#04180d; --stroke:#0d3a20; --track:#0d3a20;
+  --text:#7CFC00; --muted:#2f8f4f; --accent:#39ff14; --amber:#ffd166;
+  --red:#ff5a3c; --green:#39ff14; --purple:#a7f3d0;
+  --font:'Segoe UI',system-ui,sans-serif; --board:#010a05;
+}
+
+/* ============================== CHROME ================================== */
+#device {
+  display:flex; flex-direction:column; height:100vh; width:100vw;
+  background:var(--board); color:var(--text); font-family:var(--font);
+  overflow:hidden;
+}
+#topbar, #botbar {
+  display:flex; align-items:center; gap:8px; background:var(--panel);
+  padding:0 12px; flex:0 0 auto;
+}
+#topbar { height:36px; border-bottom:1px solid var(--stroke); }
+#botbar { height:22px; border-top:1px solid var(--stroke);
+          font-size:10px; color:var(--muted); }
+#botbar #vin { margin-left:auto; opacity:.75; }
+#title { font-weight:700; letter-spacing:.5px; color:var(--accent); font-size:15px; }
+.spacer { flex:1; }
+#clock { color:var(--muted); font-weight:700; font-size:12px; }
+.pill { font-size:10px; font-weight:700; padding:2px 10px; border-radius:10px;
+        background:var(--green); color:var(--bg); }
+.pill.off { background:var(--red); }
+#designSelect {
+  background:var(--bg); color:var(--text); border:1px solid var(--stroke);
+  border-radius:6px; font-size:11px; padding:2px 6px; font-family:inherit;
+}
+
+#stage {
+  flex:1 1 auto; min-height:0; padding:6px; gap:6px;
+  display:grid; box-sizing:border-box;
+}
+
+/* Shared panel look */
+.panel {
+  background:var(--panel); border:1px solid var(--stroke); border-radius:8px;
+  padding:8px 10px; display:flex; flex-direction:column; min-height:0; overflow:hidden;
+}
+
+/* ============================ ARC GAUGE ================================= */
+.gauge {
+  position:relative; display:flex; align-items:center; justify-content:center;
+  background:var(--panel); border:1px solid var(--stroke); border-radius:8px;
+  min-height:0; overflow:hidden;
+}
+.gauge svg { width:100%; height:100%; }
+.gauge .g-text {
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; pointer-events:none;
+}
+.gauge .g-label { font-size:10px; font-weight:700; color:var(--muted); letter-spacing:1px; }
+.gauge .g-val   { font-size:26px; font-weight:700; color:var(--text); line-height:1.05; }
+.gauge .g-unit  { font-size:10px; color:var(--muted); }
+.gauge.big .g-val { font-size:42px; }
+.gauge.big .g-label { font-size:11px; }
+
+/* ============================ CARD METER =============================== */
+.card {
+  background:var(--panel); border:1px solid var(--stroke); border-radius:8px;
+  padding:10px 12px; display:flex; flex-direction:column; justify-content:center;
+  gap:5px; min-height:0;
+}
+.card .c-label { font-size:10px; font-weight:700; letter-spacing:1px; color:var(--muted); }
+.card .c-row { display:flex; align-items:baseline; gap:4px; }
+.card .c-val { font-size:26px; font-weight:700; color:var(--text); line-height:1; }
+.card .c-unit { font-size:10px; color:var(--muted); }
+.meter { height:8px; background:var(--track); border-radius:5px; overflow:hidden; }
+.meter > span { display:block; height:100%; width:0; border-radius:5px;
+                background:var(--accent); transition:width .15s linear; }
+
+/* ========================== SEGMENT BAR (retro) ======================== */
+.seg { display:flex; flex-direction:column; gap:4px; }
+.seg .s-top { display:flex; justify-content:space-between; align-items:baseline; font-size:12px; }
+.seg .s-label { color:var(--muted); letter-spacing:2px; }
+.seg .s-val { color:var(--accent); font-weight:700; }
+.seg .s-unit { color:var(--muted); font-size:10px; margin-left:2px; }
+.segbar { display:flex; gap:2px; height:16px; }
+.segbar > i { flex:1; background:var(--track); border-radius:1px; }
+.segbar > i.on     { background:var(--accent); }
+.segbar > i.warn   { background:var(--amber); }
+.segbar > i.danger { background:var(--red); }
+
+/* ============================ DTC PANEL ================================ */
+.dtc-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+.dtc-title { font-size:12px; font-weight:700; color:var(--text); letter-spacing:.5px; }
+.badge { min-width:18px; text-align:center; font-size:11px; font-weight:700;
+         border-radius:9px; padding:0 6px; background:var(--green); color:var(--bg); }
+.badge.alert { background:var(--red); }
+.dtc-list { flex:1 1 auto; min-height:0; overflow:auto; display:flex;
+            flex-direction:column; gap:6px; }
+.dtc-list.horiz { flex-direction:row; overflow-x:auto; overflow-y:hidden; align-items:stretch; }
+.dtc-list.horiz .dtc-row { min-width:150px; }
+.dtc-row { background:var(--bg); border-left:3px solid var(--muted); border-radius:6px;
+           padding:4px 8px; }
+.dtc-row .r-top { display:flex; justify-content:space-between; align-items:center; gap:6px; }
+.dtc-code { font-size:14px; font-weight:700; color:var(--text); }
+.dtc-sev { font-size:9px; font-weight:700; }
+.dtc-desc { font-size:10px; color:var(--muted); line-height:1.15; }
+.dtc-empty { color:var(--muted); font-size:12px; }
+
+/* Ticker (cluster) */
+.ticker { display:flex; align-items:center; gap:16px; padding:0 12px;
+          white-space:nowrap; overflow:hidden; font-size:12px; }
+.ticker .t-count { font-weight:700; color:var(--muted); letter-spacing:1px; }
+.ticker .t-item { display:inline-flex; gap:6px; align-items:center; }
+.ticker .t-code { font-weight:700; }
+
+/* ============================== LAYOUTS ================================ */
+/* 1. cockpit -- 2x2 arcs + side DTC panel */
+.layout-cockpit { grid-template-columns:1fr 190px; }
+.layout-cockpit .gauge-grid {
+  display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:6px; min-height:0;
+}
+
+/* 2. cluster -- two big arcs, two small arcs, DTC ticker strip */
+.layout-cluster { grid-template-rows:1.5fr 1fr 34px; }
+.layout-cluster .big-row, .layout-cluster .small-row { display:flex; gap:6px; min-height:0; }
+
+/* 3. cards -- 2x2 stat cards + horizontal DTC strip */
+.layout-cards { grid-template-rows:1fr 92px; }
+.layout-cards .card-grid {
+  display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:6px; min-height:0;
+}
+
+/* 4. retro -- stacked LCD segment meters + side DTC list */
+.layout-retro { grid-template-columns:1fr 172px; }
+.layout-retro .retro-cols { flex:1; justify-content:space-around; gap:10px; }
+.theme-retro #device {
+  background-image:repeating-linear-gradient(rgba(0,0,0,0) 0 2px, rgba(0,0,0,.18) 2px 4px);
+}
+
+/* 5. neon -- single row of glowing arcs + DTC ticker (synthwave) */
+.layout-neon { grid-template-rows:1fr 34px; }
+.layout-neon .neon-row { display:flex; gap:6px; min-height:0; }
+.layout-neon .neon-row .gauge { flex:1; }
+.theme-neon #device {
+  background-image:
+    linear-gradient(rgba(124,58,237,.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,58,237,.16) 1px, transparent 1px);
+  background-size:26px 26px;
+}
+.theme-neon .gauge .g-val { text-shadow:0 0 10px currentColor; }
+.theme-neon #title { text-shadow:0 0 8px var(--purple); }
+
+/* 6. hud -- heads-up display: giant central speed, RPM bar, corner readouts */
+.layout-hud { grid-template-rows:1fr; }
+.hud { flex:1; min-height:0; display:flex; flex-direction:column;
+       justify-content:space-between; padding:8px 16px; width:100%; }
+.hud-top { display:flex; flex-direction:column; gap:5px; }
+.hud-rpm-top { display:flex; justify-content:space-between; font-size:12px;
+               letter-spacing:2px; color:var(--muted); }
+.hud-rpm-val { color:var(--accent); font-weight:700; }
+.hud-center { flex:1; display:flex; flex-direction:column; align-items:center;
+              justify-content:center; }
+.hud-speed { font-size:112px; font-weight:200; line-height:.85; color:var(--text);
+             text-shadow:0 0 18px rgba(57,255,20,.35); }
+.hud-speed-unit { font-size:14px; letter-spacing:7px; color:var(--muted); margin-top:2px; }
+.hud-bottom { display:flex; justify-content:space-around; gap:10px; }
+.hud-read { display:flex; flex-direction:column; align-items:center; gap:2px; }
+.hud-k { font-size:9px; letter-spacing:2px; color:var(--muted); }
+.hud-v { font-size:20px; font-weight:700; color:var(--text); }

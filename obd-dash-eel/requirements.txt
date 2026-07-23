@@ -1,0 +1,5 @@
+eel>=0.16
+# eel needs Chrome or Edge (any Chromium browser) installed to open the app
+# window; otherwise run with --browser none and open the URL yourself.
+# Optional: a real ELM327 Bluetooth adapter
+# obd>=0.7.1

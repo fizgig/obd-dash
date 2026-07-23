@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dashboard</class>
+ <widget class="QWidget" name="Dashboard">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>480</width><height>320</height></rect>
+  </property>
+  <property name="windowTitle">
+   <string>PiZero OBD (Qt)</string>
+  </property>
+  <layout class="QVBoxLayout" name="root">
+   <property name="spacing"><number>0</number></property>
+   <property name="leftMargin"><number>0</number></property>
+   <property name="topMargin"><number>0</number></property>
+   <property name="rightMargin"><number>0</number></property>
+   <property name="bottomMargin"><number>0</number></property>
+
+   <!-- ============================ HEADER ============================ -->
+   <item>
+    <widget class="QFrame" name="header">
+     <property name="minimumSize"><size><width>0</width><height>34</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>34</height></size></property>
+     <layout class="QHBoxLayout" name="headerLayout">
+      <property name="leftMargin"><number>12</number></property>
+      <property name="topMargin"><number>0</number></property>
+      <property name="rightMargin"><number>10</number></property>
+      <property name="bottomMargin"><number>0</number></property>
+      <item>
+       <widget class="QLabel" name="title">
+        <property name="text"><string>PiZero  OBD</string></property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="headerSpacer">
+        <property name="orientation"><enum>Qt::Horizontal</enum></property>
+        <property name="sizeHint" stdset="0"><size><width>40</width><height>10</height></size></property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="linkPill">
+        <property name="text"><string> BT LINK </string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="clock">
+        <property name="text"><string>--:--</string></property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+
+   <!-- ============================= BODY ============================= -->
+   <item>
+    <widget class="QFrame" name="body">
+     <layout class="QHBoxLayout" name="bodyLayout">
+      <property name="spacing"><number>6</number></property>
+      <property name="leftMargin"><number>6</number></property>
+      <property name="topMargin"><number>6</number></property>
+      <property name="rightMargin"><number>6</number></property>
+      <property name="bottomMargin"><number>6</number></property>
+
+      <!-- 2x2 gauge grid -->
+      <item>
+       <widget class="QWidget" name="gaugeGrid" native="true">
+        <layout class="QGridLayout" name="gaugeLayout">
+         <property name="spacing"><number>6</number></property>
+         <property name="leftMargin"><number>0</number></property>
+         <property name="topMargin"><number>0</number></property>
+         <property name="rightMargin"><number>0</number></property>
+         <property name="bottomMargin"><number>0</number></property>
+         <item row="0" column="0">
+          <widget class="ArcGauge" name="gaugeRpm" native="true"/>
+         </item>
+         <item row="0" column="1">
+          <widget class="ArcGauge" name="gaugeSpeed" native="true"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="ArcGauge" name="gaugeCoolant" native="true"/>
+         </item>
+         <item row="1" column="1">
+          <widget class="ArcGauge" name="gaugeVoltage" native="true"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+
+      <!-- Trouble-codes panel -->
+      <item>
+       <widget class="QFrame" name="dtcPanel">
+        <property name="minimumSize"><size><width>196</width><height>0</height></size></property>
+        <layout class="QVBoxLayout" name="dtcPanelLayout">
+         <property name="spacing"><number>6</number></property>
+         <property name="leftMargin"><number>10</number></property>
+         <property name="topMargin"><number>8</number></property>
+         <property name="rightMargin"><number>10</number></property>
+         <property name="bottomMargin"><number>8</number></property>
+         <item>
+          <layout class="QHBoxLayout" name="dtcHeaderLayout">
+           <item>
+            <widget class="QLabel" name="dtcTitle">
+             <property name="text"><string>TROUBLE CODES</string></property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="dtcHeaderSpacer">
+             <property name="orientation"><enum>Qt::Horizontal</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>10</width><height>10</height></size></property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="dtcBadge">
+             <property name="text"><string> 0 </string></property>
+             <property name="alignment"><set>Qt::AlignCenter</set></property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="Line" name="dtcRule">
+           <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QScrollArea" name="dtcScroll">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+           <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+           <widget class="QWidget" name="dtcContainer">
+            <layout class="QVBoxLayout" name="dtcLayout">
+             <property name="spacing"><number>6</number></property>
+             <property name="leftMargin"><number>0</number></property>
+             <property name="topMargin"><number>0</number></property>
+             <property name="rightMargin"><number>0</number></property>
+             <property name="bottomMargin"><number>0</number></property>
+             <item>
+              <spacer name="dtcStretch">
+               <property name="orientation"><enum>Qt::Vertical</enum></property>
+               <property name="sizeHint" stdset="0"><size><width>10</width><height>10</height></size></property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+
+   <!-- ============================ FOOTER ============================ -->
+   <item>
+    <widget class="QFrame" name="footer">
+     <property name="minimumSize"><size><width>0</width><height>22</height></size></property>
+     <property name="maximumSize"><size><width>16777215</width><height>22</height></size></property>
+     <layout class="QHBoxLayout" name="footerLayout">
+      <property name="leftMargin"><number>12</number></property>
+      <property name="topMargin"><number>0</number></property>
+      <property name="rightMargin"><number>12</number></property>
+      <property name="bottomMargin"><number>0</number></property>
+      <item>
+       <widget class="QLabel" name="vehicle">
+        <property name="text"><string>--</string></property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="footerSpacer">
+        <property name="orientation"><enum>Qt::Horizontal</enum></property>
+        <property name="sizeHint" stdset="0"><size><width>40</width><height>10</height></size></property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="vin">
+        <property name="text"><string>VIN --</string></property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ArcGauge</class>
+   <extends>QWidget</extends>
+   <header>gauge.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
